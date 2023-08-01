@@ -10,14 +10,23 @@ module.exports = {
   output: {
     path: path.join(__dirname, 'dist'),
     filename: 'bundle.[contenthash].js',
-    clean: true
+    clean: true,
+    environment: {
+      arrowFunction: false,
+      bigIntLiteral: false,
+      const: false,
+      destructuring: false,
+      dynamicImport: false,
+      forOf: false,
+      module: false
+    },
     // publicPath: './' // set assets path to relative
   },
   devServer: {
     compress: true,
     port: 8000,
     open: true,
-    hot: 'only',
+    hot: true,
     watchFiles: ['./src/*.html']
   },
   plugins: [
@@ -29,9 +38,20 @@ module.exports = {
   ],
   module: {
     rules: [
+      // {
+      //   test: /\.css$/i,
+      //   use: [MiniCssExtractPlugin.loader, 'css-loader'],
+      // },
       {
-        test: /\.css$/i,
-        use: [MiniCssExtractPlugin.loader, 'css-loader'],
+        test: /\.s[ac]ss$/i,
+        use: [
+          // Creates `style` nodes from JS strings
+          'style-loader',
+          // Translates CSS into CommonJS
+          'css-loader',
+          // Compiles Sass to CSS
+          'sass-loader',
+        ],
       },
       {
         test: /\.(png|svg|jpg|jpeg|gif)$/i,
@@ -45,11 +65,6 @@ module.exports = {
           options: {
             presets: [
               ['@babel/preset-env', { targets: 'ie 9' }]
-            ],
-            plugins: [
-              '@babel/plugin-transform-arrow-functions',
-              '@babel/plugin-transform-block-scoping'
-              // other plugins you may need
             ]
           }
         }
