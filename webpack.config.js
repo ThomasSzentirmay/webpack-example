@@ -3,10 +3,22 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
+const {GenerateSW} = require('workbox-webpack-plugin');
+const is_prod = process.env.NODE_ENV === 'production';
+
+const plugins = [
+  new HtmlWebpackPlugin({
+    title: 'Webpack Example',
+    template: './src/main.html'
+  }),
+  new MiniCssExtractPlugin()
+];
+
+if (is_prod) plugins.push(new GenerateSW);
 
 module.exports = {
   entry: './src/index.js',
-  mode: 'development',
+  mode: is_prod ? 'production' : 'development',
   output: {
     path: path.join(__dirname, 'dist'),
     filename: 'bundle.[contenthash].js',
@@ -29,13 +41,7 @@ module.exports = {
     hot: true,
     watchFiles: ['./src/*.html']
   },
-  plugins: [
-    new HtmlWebpackPlugin({
-      title: 'Webpack Example',
-      template: './src/main.html'
-    }),
-    new MiniCssExtractPlugin()
-  ],
+  plugins,
   module: {
     rules: [
       // {
