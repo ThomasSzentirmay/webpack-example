@@ -16,7 +16,31 @@ const plugins = [
   new MiniCssExtractPlugin()
 ];
 
-if (is_prod) plugins.push(new GenerateSW);
+if (is_prod) 
+  plugins.push(new GenerateSW);
+  plugins.push(new WebpackPwaManifest({
+    name: 'Notes PWA App',
+    short_name: 'NPWAApp',
+    description: 'My awesome Progressive Web App!',
+    background_color: '#555',
+    theme_color: '#35ae9b',
+    // crossorigin: 'use-credentials', //can be null, use-credentials or anonymous
+    icons: [
+      {
+        src: path.resolve('src/assets/icon.png'),
+        sizes: [96, 128, 192, 256, 384, 512] // multiple sizes
+      },
+      {
+        src: path.resolve('src/assets/large-icon.png'),
+        size: '1024x1024' // you can also use the specifications pattern
+      },
+      {
+        src: path.resolve('src/assets/maskable-icon.png'),
+        size: '1024x1024',
+        purpose: 'maskable'
+      }
+    ]
+  }))
 
 module.exports = {
   entry: './src/index.js',
